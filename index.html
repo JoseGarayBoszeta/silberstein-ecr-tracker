@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECR Tracker - 5to Grado Spanish</title>
+    <title>ECR Tracker - Silberstein Elementary</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -24,8 +24,26 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             text-align: center;
         }
+        .school-branding {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .school-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        .school-name {
+            color: #1a5f2a;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
         h1 {
-            color: #333;
+            color: #667eea;
             font-size: 2.5em;
             margin-bottom: 10px;
         }
@@ -139,6 +157,10 @@
 <body>
     <div class="container">
         <header>
+            <div class="school-branding">
+                <img src="silberstein_logo.png" alt="Silberstein Elementary" class="school-logo">
+                <span class="school-name">Silberstein Elementary</span>
+            </div>
             <h1>ECR Tracker</h1>
             <p class="subtitle">Extended Constructed Response - 5to Grado Spanish</p>
             <div class="stats">

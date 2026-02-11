@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECR Tracker - HERNANDEZ MARTINEZ, EMELY</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .nav-bar {
+            background: rgba(255,255,255,0.95);
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .nav-bar a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-bar a:hover { color: #764ba2; }
+        .nav-title { color: #333; font-size: 0.9em; }
+        .main-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        /* Tracker Personal */
+        .personal-tracker {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 2px solid #667eea;
+        }
+        .tracker-title {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            padding: 0;
+            background: none;
+        }
+        .tracker-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .tracker-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        .tracker-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .tracker-table .clickable-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .tracker-table .clickable-row:hover {
+            background: #f0f0ff;
+        }
+        .tracker-table .future-row {
+            color: #999;
+            font-style: italic;
+        }
+        .tracker-table .pending {
+            text-align: center;
+        }
+        .score-cell {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            min-width: 45px;
+        }
+        .score-cell.high { background: #d4edda; color: #28a745; }
+        .score-cell.medium { background: #fff3cd; color: #e67e00; }
+        .score-cell.low { background: #f8d7da; color: #dc3545; }
+
+        .tracker-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 0.85em;
+            color: #666;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        .legend-color.high { background: #28a745; }
+        .legend-color.medium { background: #fd7e14; }
+        .legend-color.low { background: #dc3545; }
+
+        /* Tabs */
+        .tabs-container {
+            margin-bottom: 25px;
+        }
+        .tabs {
+            display: flex;
+            gap: 5px;
+            border-bottom: 3px solid #667eea;
+        }
+        .tab {
+            padding: 12px 25px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab:hover { background: #d4d4d4; }
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Contenido del ensayo */
+        h2 {
+            color: #333;
+            background-color: #f0f0f0;
+            padding: 12px 15px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        h3 { color: #555; margin-top: 20px; margin-bottom: 10px; }
+        .ensayo-texto {
+            background-color: #fff3cd;
+            padding: 20px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .ensayo-texto p { margin-bottom: 15px; line-height: 1.6; }
+        .ensayo-texto p:last-child { margin-bottom: 0; }
+        .calificacion {
+            background-color: #d4edda;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .feedback {
+            background-color: #e7f3ff;
+            padding: 20px;
+            border-left: 4px solid #1a73e8;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .feedback ul { margin-left: 20px; margin-top: 10px; }
+        .feedback li { margin-bottom: 8px; }
+        .mejora {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .mejora p { margin-bottom: 15px; }
+        .mejora ul { margin-left: 20px; margin-top: 10px; }
+        .mejora li { margin-bottom: 5px; }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .total {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .total.high { color: #28a745; }
+        .total.medium { color: #fd7e14; }
+        .total.low { color: #dc3545; }
+        .nota-roja { color: #c0392b; font-weight: bold; }
+        .nota-verde { color: #27ae60; font-weight: bold; }
+        .alerta {
+            background-color: #ffcccc;
+            padding: 30px;
+            border: 3px solid #c0392b;
+            text-align: center;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+        .incompleto {
+            background-color: #ffcccc;
+            padding: 10px;
+            border: 2px solid #c0392b;
+            border-radius: 5px;
+        }
+        .instrucciones {
+            background-color: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .instrucciones ol { margin-left: 20px; margin-top: 10px; }
+        .instrucciones li { margin-bottom: 10px; }
+        .instrucciones ul { margin-left: 20px; margin-top: 5px; }
+        .excelente {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #28a745;
+        }
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 25px;
+            padding: 15px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <a href="../index.html">&#8592; Ver Ranking de la Clase</a>
+            <span class="nav-title">ECR Tracker - 5to Grado</span>
+        </nav>
+
+        <div class="main-card">
+            <h1>ECR TRACKER - HERNANDEZ MARTINEZ, EMELY</h1>
+
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab active" onclick="openTab(event, 'ensayo1')">Ensayo 1</button>
+                </div>
+            </div>
+
+            <div id="ensayo1" class="tab-content active">
+                <h2>ENSAYO 1 - 02/07/2025</h2>
+<p><strong>Tema:</strong> El Lenguaje de los Perros de las Praderas</p>
+
+<h3>TU ENSAYO:</h3>
+
+<div class="ensayo-texto">
+<p><strong>Introducción:</strong></p>
+<p>como es el lenguaje de los perros de la pradera. en el texto dice que los perros de la pradera se comunicaban para informar que los de predadores benian y por eso lo sed. que quiere decir esto que se cuidan entre eyos.</p>
+
+<p><strong>Párrafo 1:</strong></p>
+<p>En el texto dice que los perros acian el sonido para informar a otros perros que los depredadores benian asia donde estan todos los demas perros, pero lo que dice en el texto en la vida real es que los perros de la pradera asian un chirrido para informar que los depredadores iban yegando.</p>
+
+<p><strong>Párrafo 2:</strong></p>
+<p>Evidencia; en el texto dice; que los cientificos grabaron como se comportaban y inbestigaron que significaba cada chirrido que asia los perros pero no pudieron investigar de serca asi que grabaron con microfonos control remoto y despositivos. en el textodicce todo eso pero yo lo diria asi que grabaron los chirridos y inbestigaron que significa cada chirrido.</p>
+
+<p><strong>Conclusión:</strong></p>
+<p>estan diciendo a otros perros que baya al abujero y que ban yegando los depredadores eso lo asen para salvar alos demas perros de la pradera.</p>
+</div>
+
+<h3>CALIFICACIÓN:</h3>
+
+<div class="calificacion">
+<table>
+    <tr>
+        <th>Categoría</th>
+        <th>Puntos</th>
+        <th>Descripción</th>
+    </tr>
+    <tr>
+        <td><strong>Desarrollo y Organización</strong></td>
+        <td>1/3</td>
+        <td>Ideas evidentes pero no desarrolladas</td>
+    </tr>
+    <tr>
+        <td><strong>Convenciones</strong></td>
+        <td>0/3</td>
+        <td>Muchos errores que afectan claridad</td>
+    </tr>
+</table>
+
+<p class="total low">TOTAL: 20/100</p>
+</div>
+
+<h3>FEEDBACK:</h3>
+
+<div class="feedback">
+<p><strong class="nota-verde">Lo que hiciste bien:</strong></p>
+<ul>
+    <li>Completaste las 4 partes del ensayo</li>
+    <li>Intentaste explicar las ideas con tus propias palabras</li>
+</ul>
+</div>
+
+<h3>ÁREAS DE MEJORA:</h3>
+
+<div class="mejora">
+<p><strong class="nota-roja">1. Citas directas:</strong> No usaste citas con comillas del texto. Ejemplo correcto: "Según el texto, 'hace un chirrido para advertir a otros' (párrafo 4)."</p>
+
+<p><strong class="nota-roja">2. Mayúsculas:</strong> Todas las oraciones deben empezar con mayúscula.</p>
+
+<p><strong class="nota-roja">3. Ortografía:</strong> Muchos errores:</p>
+<ul>
+    <li>"benian" → venían</li>
+    <li>"eyos" → ellos</li>
+    <li>"acian/asian" → hacían</li>
+    <li>"yegando" → llegando</li>
+    <li>"inbestigaron" → investigaron</li>
+    <li>"serca" → cerca</li>
+    <li>"abujero" → agujero</li>
+    <li>"asen" → hacen</li>
+</ul>
+
+<p><strong class="nota-roja">4. Oraciones claras:</strong> "por eso lo sed" - no tiene sentido. Revisa que tus oraciones estén completas.</p>
+
+<p><strong class="nota-roja">5. Formato:</strong> Tu conclusión no empieza con "En conclusión..."</p>
+</div>
+
+<h3>META PARA EL PRÓXIMO ENSAYO:</h3>
+<p style="background-color: #ffe6e6; padding: 15px; border-radius: 8px; font-size: 18px;">
+<strong>Usa mayúsculas al inicio de oraciones y revisa tu ortografía.</strong>
+</p>
+            </div>
+            </div>
+
+            <div class="personal-tracker">
+                <h2 class="tracker-title">Mi Progreso</h2>
+                <table class="tracker-table">
+                    <thead>
+                        <tr>
+                            <th>Ensayo</th>
+                            <th>Fecha</th>
+                            <th>Desarrollo</th>
+                            <th>Convenciones</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="clickable-row" onclick="openTab(event, 'ensayo1')">
+                            <td><strong>1</strong></td>
+                            <td>02/07/2025</td>
+                            <td>1/3</td>
+                            <td>0/3</td>
+                            <td><span class="score-cell low">20</span></td>
+                        </tr>
+                        <tr class="future-row">
+                            <td>2</td>
+                            <td colspan="4" class="pending">Próximamente...</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="tracker-legend">
+                    <span class="legend-item"><span class="legend-color high"></span> 70-100 Excelente</span>
+                    <span class="legend-item"><span class="legend-color medium"></span> 50-69 En progreso</span>
+                    <span class="legend-item"><span class="legend-color low"></span> 0-49 Necesita mejora</span>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            ECR Tracker - STAAR Grade 5 Spanish | Actualizado: Febrero 2025
+        </footer>
+    </div>
+
+    <script>
+        function openTab(evt, tabId) {
+            var tabContents = document.getElementsByClassName('tab-content');
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            var tabs = document.getElementsByClassName('tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            document.getElementById(tabId).classList.add('active');
+            if (evt.currentTarget && evt.currentTarget.classList) {
+                evt.currentTarget.classList.add('active');
+            }
+            // Activar el tab correspondiente si se hizo clic desde la tabla
+            var tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(function(btn) {
+                if (btn.getAttribute('onclick').includes(tabId)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

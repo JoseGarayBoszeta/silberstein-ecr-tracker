@@ -255,7 +255,7 @@
 
             <div class="tabs-container">
                 <div class="tabs">
-                    <button class="tab active" onclick="openTab(event, 'ensayo1')">Ensayo 1</button>
+                    <button class="tab" onclick="openTab(event, 'ensayo1')">Ensayo 1</button>
                     <button class="tab" onclick="openTab(event, 'ensayo2')">Ensayo 2</button>
                     <button class="tab" onclick="openTab(event, 'ensayo3')">Ensayo 3</button>
                     <button class="tab" onclick="openTab(event, 'ensayo4')">Ensayo 4</button>
@@ -263,7 +263,7 @@
                 </div>
             </div>
 
-            <div id="ensayo1" class="tab-content active">
+            <div id="ensayo1" class="tab-content">
                 <h2>ENSAYO 1 - 02/07/2025</h2>
                 <p><strong>Tema:</strong> El Lenguaje de los Perros de las Praderas</p>
 
@@ -638,7 +638,7 @@ Algunos  no se podian enteender ni escuchar por que si no o asian bien suave y p
     </tr>
 </table>
 
-<p class="total medium">TOTAL: 50/100</p>
+<p class="total medium">TOTAL: 55/100</p>
 </div>
 
 
@@ -728,7 +728,7 @@ Algunos  no se podian enteender ni escuchar por que si no o asian bien suave y p
                             <td>03/06/2026</td>
                             <td>2/3</td>
                             <td>1/2</td>
-                            <td><span class="score-cell medium">50</span></td>
+                            <td><span class="score-cell medium">55</span></td>
                         </tr>
                         <tr class="future-row">
                             <td>6</td>
@@ -770,6 +770,25 @@ Algunos  no se podian enteender ni escuchar por que si no o asian bien suave y p
                 }
             });
         }
+
+        // Navegar al ensayo específico si hay hash, o al último ensayo por defecto
+        document.addEventListener('DOMContentLoaded', function() {
+            var hash = window.location.hash;
+            if (hash && hash.match(/^#ensayo\d+$/)) {
+                var tabId = hash.substring(1);
+                openTab(null, tabId);
+                return;
+            }
+            var tabs = document.querySelectorAll('.tab');
+            if (tabs.length > 0) {
+                var lastTab = tabs[tabs.length - 1];
+                var onclick = lastTab.getAttribute('onclick');
+                var match = onclick.match(/'(ensayo\d+)'/);
+                if (match) {
+                    openTab(null, match[1]);
+                }
+            }
+        });
     </script>
 </body>
 </html>

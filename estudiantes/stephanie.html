@@ -286,7 +286,7 @@
 
             <div class="tabs-container">
                 <div class="tabs">
-                    <button class="tab active" onclick="openTab(event, 'ensayo1')">Ensayo 1</button>
+                    <button class="tab" onclick="openTab(event, 'ensayo1')">Ensayo 1</button>
                     <button class="tab" onclick="openTab(event, 'ensayo2')">Ensayo 2</button>
                     <button class="tab" onclick="openTab(event, 'ensayo3')">Ensayo 3</button>
                     <button class="tab" onclick="openTab(event, 'ensayo4')">Ensayo 4</button>
@@ -294,7 +294,7 @@
                 </div>
             </div>
 
-            <div id="ensayo1" class="tab-content active">
+            <div id="ensayo1" class="tab-content">
                 <h2>ENSAYO 1 - 02/07/2025</h2>
 <p><strong>Tema:</strong> El Lenguaje de los Perros de las Praderas</p>
 
@@ -792,7 +792,7 @@
                 tabs[i].classList.remove('active');
             }
             document.getElementById(tabId).classList.add('active');
-            if (evt.currentTarget && evt.currentTarget.classList) {
+            if (evt && evt.currentTarget && evt.currentTarget.classList) {
                 evt.currentTarget.classList.add('active');
             }
             // Activar el tab correspondiente si se hizo clic desde la tabla
@@ -803,6 +803,25 @@
                 }
             });
         }
+
+        // Navegar al ensayo específico si hay hash, o al último ensayo por defecto
+        document.addEventListener('DOMContentLoaded', function() {
+            var hash = window.location.hash;
+            if (hash && hash.match(/^#ensayo\d+$/)) {
+                var tabId = hash.substring(1);
+                openTab(null, tabId);
+                return;
+            }
+            var tabs = document.querySelectorAll('.tab');
+            if (tabs.length > 0) {
+                var lastTab = tabs[tabs.length - 1];
+                var onclick = lastTab.getAttribute('onclick');
+                var match = onclick.match(/'(ensayo\d+)'/);
+                if (match) {
+                    openTab(null, match[1]);
+                }
+            }
+        });
     </script>
 </body>
 </html>
